@@ -245,19 +245,18 @@ export default function Lab1() {
           <br />
         </form>
         <h4>Anchor tag</h4>
-        Please 
+        Please
         <a href="https://www.lipsum.com" id="wd-lipsum">
           click here
         </a>
-         to get dummy text
+        to get dummy text
         <br />
         <h4>Github Link </h4>
-        Please 
+        Please
         <a href="https://github.com/kaw-s" id="wd-github">
           click here
         </a>
-         to get my github profile
-
+        to get my github profile
         <br />
       </div>
     </div>
