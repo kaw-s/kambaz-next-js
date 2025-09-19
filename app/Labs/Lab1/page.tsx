@@ -3,8 +3,21 @@
 export default function Lab1() {
   return (
     <div id="wd-lab1">
-      <h2>Lab 1</h2>
+      <h2>Lab 1 | Sheena Kaw | Section: 1 (FRI) | </h2>
       <h3>HTML Examples</h3>
+      <div id="hw-links">
+        <a href="https://github.com/kaw-s/kambaz-next-js" id="wd-github">
+          GitHub source code repo
+        </a>
+        <br />
+
+        <a
+          href="https://kambaz-next-js-git-main-sheenas-projects-df9ebcc6.vercel.app?_vercel_share=PUWwNuK3TyVilodcCagjoGClkxq2Wmn3"
+          id="wd-vercel"
+        >
+          Vercel Deploymnet
+        </a>
+      </div>
       <div id="wd-h-tag">
         <h4>Heading Tags</h4>
         Text documents are often broken up into several sections and
@@ -93,7 +106,7 @@ export default function Lab1() {
               <td>2/10/21</td>
               <td>90</td>
             </tr>
-            <tr> ... </tr>
+            <tr> </tr>
           </tbody>
           <tfoot>
             <tr>
@@ -125,7 +138,7 @@ export default function Lab1() {
           <label htmlFor="wd-text-fields-password">Password:</label>
           <input
             type="password"
-            value="123@#$asd"
+            defaultValue="123@#$asd"
             id="wd-text-fields-password"
           />
           <br />
@@ -136,7 +149,7 @@ export default function Lab1() {
           <input
             type="text"
             placeholder="Doe"
-            value="Wonderland"
+            defaultValue="Wonderland"
             title="The last name"
             id="wd-text-fields-last-name"
           />
