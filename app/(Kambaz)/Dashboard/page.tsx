@@ -11,6 +11,7 @@ export default function Dashboard() {
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       <h2 id="wd-dashboard-published">Published Courses (12)</h2> <hr />
       <div id="wd-dashboard-courses">
+        
         <div className="wd-dashboard-course">
           <Link href="/Courses/1234" className="wd-dashboard-course-link">
             <Image
