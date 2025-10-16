@@ -15,6 +15,7 @@ export default function AccountNavigation() {
         const isActive = pathname === link.href;
         return (
           <Link
+            key={link.href}
             href={link.href}
             className={`list-group-item border-0 ${
               isActive ? "active" : "text-danger"
