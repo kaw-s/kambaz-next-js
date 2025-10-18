@@ -1,3 +1,4 @@
+
 export default function People() {
  return (
    <div id="wd-people">

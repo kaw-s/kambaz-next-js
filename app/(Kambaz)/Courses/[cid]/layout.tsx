@@ -1,27 +1,31 @@
 import { ReactNode } from "react";
 import CourseNavigation from "./Navigation";
-import { FaAlignJustify } from "react-icons/fa";
+
 import { Row, Col } from "react-bootstrap";
+import { courses } from "../../Database";
+import Breadcrumb from "./BreadCrumb";
 
 export default async function CoursesLayout({
   children,
   params,
 }: Readonly<{ children: ReactNode; params: Promise<{ cid: string }> }>) {
   const { cid } = await params;
+  const course = courses.find((course) => course._id === cid);
+
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
-        <FaAlignJustify className="me-4 fs-4 mb-1" />
-        Course {cid}
+        {/** add the bread crumb instead of the course heading */}
+        <Breadcrumb course={course} />
       </h2>
       <hr />
       <Row>
-        
         <Col
           className="d-none d-lg-block position-fixed"
           style={{ width: "200px" }}
         >
-          <CourseNavigation />
+          {/** pass the cid to the courseNavigation*/}
+          <CourseNavigation cid={cid} />
         </Col>
 
         <Col xs={12} className="pt-4">

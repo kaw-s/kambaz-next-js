@@ -1,6 +1,6 @@
 import Modules from "../Modules/page";
 import CourseStatus from "./Status";
-import CourseNavigation from "../Navigation";
+
 
 export default function Home() {
   return (

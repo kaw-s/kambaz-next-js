@@ -1,6 +1,5 @@
 import { Button } from "react-bootstrap";
 import { FaCheckCircle } from "react-icons/fa";
-import { MdDoDisturb, MdDoDisturbAlt } from "react-icons/md";
 import { MdDoNotDisturbAlt } from "react-icons/md";
 import { BiImport } from "react-icons/bi";
 import { LiaFileImportSolid } from "react-icons/lia";
@@ -32,7 +31,7 @@ export default function CourseStatus() {
       <Button variant="secondary" size="lg" className="w-100 mt-1 text-start">
         <LiaFileImportSolid className="me-2 fs-5" /> Import from Commons{" "}
       </Button>
-      {/* Complete the rest of the buttons */}
+
       <Button variant="secondary" size="lg" className="w-100 mt-1 text-start">
         <IoMdHome className="me-2 fs-5" /> Choose Home Page{" "}
       </Button>

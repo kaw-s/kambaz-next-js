@@ -1,15 +1,2 @@
-2.4.1 Styling the Kambaz Navigation Sidebar
-- for the courses icon it navigates to the same 
-thing as the dashboard so how do i make the highlighting be the same
-- how do i know what the pixel width of the side bar is 
-
-- for the labs am i rendering them all on the page.tsx or is there 
-another way i am supposed to go about oding this 
-
-for the cards of the courses within the dashboard component,
-when I navigate to the home page where do i see the assignments?? 
-There is no way for me to get to the assinments page right aside from 
-just manually entering the assinments page 
-
-- when the instructions say for now have them all navigate to the same page does 
-that mean just set the CID (course id to be the same for all ): 2.4.3
+- the home of a course always shows course 1234 as the top label of the course
+this needs to be updated to 

@@ -1,4 +1,16 @@
+"use client";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import * as db from "../../../../Database"
+
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams(); 
+  const assignment = db.assignments.find((a: any) => a._id === aid); 
+
+  if (!assignment) {
+    return <div className="p-3">Assignment not found.</div>;
+  }
+
   return (
     <div id="wd-assignments-editor" className="p-3">
       <div className="mb-3">
@@ -9,7 +21,7 @@ export default function AssignmentEditor() {
           type="text"
           className="form-control"
           id="wd-name"
-          defaultValue="A1 - ENV + HTML"
+          defaultValue={assignment.title}
         />
       </div>
 
@@ -18,7 +30,10 @@ export default function AssignmentEditor() {
           className="form-control"
           id="wd-description"
           rows={5}
-          defaultValue="The assignment is available online Submit a link to the landing page of"
+          defaultValue={
+            assignment.description ||
+            "This assignment requires you to demonstrate your understanding of the course material."
+          }
         />
       </div>
 
@@ -31,7 +46,7 @@ export default function AssignmentEditor() {
             type="number"
             className="form-control"
             id="wd-points"
-            defaultValue={100}
+            defaultValue={assignment.points || 100}
           />
         </div>
       </div>
@@ -78,69 +93,28 @@ export default function AssignmentEditor() {
             </select>
 
             <div className="fw-bold mb-2">Online Entry Options</div>
-
-            <div className="form-check mb-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="wd-text-entry"
-                name="check-entry-type"
-              />
-              <label className="form-check-label" htmlFor="wd-text-entry">
-                Text Entry
-              </label>
-            </div>
-
-            <div className="form-check mb-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="wd-website-url"
-                name="check-entry-type"
-              />
-              <label className="form-check-label" htmlFor="wd-website-url">
-                Website URL
-              </label>
-            </div>
-
-            <div className="form-check mb-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="wd-media-recordings"
-                name="check-entry-type"
-              />
-              <label className="form-check-label" htmlFor="wd-media-recordings">
-                Media Recordings
-              </label>
-            </div>
-
-            <div className="form-check mb-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="wd-student-annotation"
-                name="check-entry-type"
-              />
-              <label
-                className="form-check-label"
-                htmlFor="wd-student-annotation"
-              >
-                Student Annotation
-              </label>
-            </div>
-
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="wd-file-upload"
-                name="check-entry-type"
-              />
-              <label className="form-check-label" htmlFor="wd-file-upload">
-                File Uploads
-              </label>
-            </div>
+            {[
+              "Text Entry",
+              "Website URL",
+              "Media Recordings",
+              "Student Annotation",
+              "File Uploads",
+            ].map((option, idx) => (
+              <div className="form-check mb-2" key={idx}>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id={`wd-${option.toLowerCase().replace(" ", "-")}`}
+                  name="check-entry-type"
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor={`wd-${option.toLowerCase().replace(" ", "-")}`}
+                >
+                  {option}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -177,7 +151,7 @@ export default function AssignmentEditor() {
               type="date"
               className="form-control mb-3"
               id="wd-due-date"
-              defaultValue="2025-05-24"
+              defaultValue={assignment.dueDate || "2025-05-24"}
             />
 
             <div className="row">
@@ -192,7 +166,7 @@ export default function AssignmentEditor() {
                   type="date"
                   className="form-control"
                   id="wd-available-from"
-                  defaultValue="2025-05-24"
+                  defaultValue={assignment.availableDate || "2025-05-20"}
                 />
               </div>
               <div className="col-md-6">
@@ -206,7 +180,7 @@ export default function AssignmentEditor() {
                   type="date"
                   className="form-control"
                   id="wd-available-until"
-                  defaultValue="2025-05-28"
+                  defaultValue={assignment.availableUntil || "2025-05-28"}
                 />
               </div>
             </div>
@@ -217,8 +191,18 @@ export default function AssignmentEditor() {
       <hr />
 
       <div className="d-flex justify-content-end gap-2">
-        <button className="btn btn-secondary btn-lg">Cancel</button>
-        <button className="btn btn-danger btn-lg">Save</button>
+        <Link
+          href={`/Courses/${cid}/Assignments`}
+          className="btn btn-secondary btn-lg"
+        >
+          Cancel
+        </Link>
+        <Link
+          href={`/Courses/${cid}/Assignments`}
+          className="btn btn-danger btn-lg"
+        >
+          Save
+        </Link>
       </div>
     </div>
   );
