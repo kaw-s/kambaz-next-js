@@ -1,16 +1,23 @@
 import { FaPlus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
-
+import Link from "next/link";
+import { useParams } from "next/navigation";
 export default function AssignmentsControls() {
+  const { cid } = useParams()
   return (
     <div id="wd-assignments-controls" className="text-nowrap">
-      <button
-        id="wd-add-assignment"
-        className="btn btn-lg btn-danger me-1 float-end"
-      >
-        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
-        Assignment
-      </button>
+      <Link href={`/Courses/${cid}/Assignments/new`}>
+        <button
+          id="wd-add-assignment"
+          className="btn btn-lg btn-danger me-1 float-end"
+        >
+          <FaPlus
+            className="position-relative me-2"
+            style={{ bottom: "1px" }}
+          />
+          Assignment
+        </button>
+      </Link>
       <button
         id="wd-add-assignment-group"
         className="btn btn-lg btn-secondary me-1 float-end"

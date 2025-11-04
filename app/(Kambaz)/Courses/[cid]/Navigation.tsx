@@ -17,8 +17,6 @@ export default function CourseNavigation({ cid }: { cid: string }) {
     "People",
   ];
 
-  console.log("this is the pathname:", pathname);
-  // Example output: /Courses/1234/Piazza
 
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">

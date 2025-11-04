@@ -1,14 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 export default function AccountNavigation() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
   const pathname = usePathname();
 
-  const links = [
-    { href: "Sigin", label: "SignIn" },
-    { href: "Signup", label: "SignUp" },
-    { href: "Profile", label: "Profile" },
-  ];
+  const links = currentUser
+    ? [{ href: "/Account/Profile", label: "Profile" }]
+    : [
+        { href: "/Account/Signin", label: "Sign In" },
+        { href: "/Account/Signup", label: "Sign Up" },
+      ];
   return (
     <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
       {links.map((link) => {

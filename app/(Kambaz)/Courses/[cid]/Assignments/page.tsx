@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
-import * as db from "../../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import AssignmentsControls from "./AssignmentsControls";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import AssignmentControlButtons from "./AssignmentControlButtons";
@@ -9,11 +10,32 @@ import { BsGripVertical } from "react-icons/bs";
 import { GiNotebook } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
 import Link from "next/link";
+import { deleteAssignment } from "./reducer";
+import { Button, Modal } from "react-bootstrap";
 
 export default function Assignments() {
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const { cid } = useParams();
-  const assignments = db.assignments.filter((a: any) => a.course === cid);
+  const dispatch = useDispatch();
+  const [showDialog, setShowDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
 
+  const handleDeleteClick = (assignment: any) => {
+    setAssignmentToDelete(assignment);
+    setShowDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete._id));
+    }
+    setShowDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDialog(false);
+  };
   return (
     <div>
       <AssignmentsControls />
@@ -47,7 +69,9 @@ export default function Assignments() {
                     {assignment.title}
                   </Link>
 
-                  <AssignmentItemControlButtons />
+                  <AssignmentItemControlButtons
+                    onDelete={() => handleDeleteClick(assignment)}
+                  />
 
                   <div className="text-muted small mt-1 ms-5 ps-2">
                     <span className="text-danger">Multiple Modules</span> |{" "}
@@ -59,6 +83,23 @@ export default function Assignments() {
           </ListGroupItem>
         </ListGroup>
       </div>
+      <Modal show={showDialog} onHide={handleCancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to remove the assignment "
+          {assignmentToDelete?.title}"?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
