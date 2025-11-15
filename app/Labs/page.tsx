@@ -26,6 +26,11 @@ export default function Labs() {
             Lab 4: JavaScript Fundamentals{" "}
           </Link>
         </li>
+         <li>
+          <Link href="/Labs/Lab5" id="wd-lab5-link">
+            Lab 5: Implementing RESTful APIs
+          </Link>
+        </li>
       </ul>
     </div>
   );
