@@ -9,10 +9,8 @@ import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "./LessonControlButtons";
 import { FormControl } from "react-bootstrap";
 import {
-  addModule,
   editModule,
   updateModule,
-  deleteModule,
   setModules,
 } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";

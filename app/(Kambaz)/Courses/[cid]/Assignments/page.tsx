@@ -12,6 +12,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import Link from "next/link";
 import { deleteAssignment } from "./reducer";
 import { Button, Modal } from "react-bootstrap";
+import * as client from "./client";
 
 export default function Assignments() {
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
@@ -25,8 +26,9 @@ export default function Assignments() {
     setShowDialog(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (assignmentToDelete) {
+      await client.deleteAssignment(assignmentToDelete._id);
       dispatch(deleteAssignment(assignmentToDelete._id));
     }
     setShowDialog(false);
