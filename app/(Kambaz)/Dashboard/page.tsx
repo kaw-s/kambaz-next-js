@@ -111,17 +111,37 @@ export default function Dashboard() {
     );
   };
 
-  const handleEnroll = (courseId: string) => {
-    if (currentUser) {
+  // const handleEnroll = (courseId: string) => {
+  //   if (currentUser) {
+  //     dispatch(enrollCourse({ userId: currentUser._id, courseId }));
+  //   }
+  // };
+  const handleEnroll = async (courseId: string) => {
+    if (!currentUser) return;
+    try {
+      await client.enrollIntoCourse(currentUser._id, courseId);
       dispatch(enrollCourse({ userId: currentUser._id, courseId }));
+    } catch (err: any) {
+      console.error("Enrollment error:", err);
     }
   };
 
-  const handleUnenroll = (courseId: string) => {
-    if (currentUser) {
+  // const handleUnenroll = (courseId: string) => {
+  //   if (currentUser) {
+  //     dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
+  //   }
+  // };
+
+  const handleUnenroll = async (courseId: string) => {
+    if (!currentUser) return;
+    try {
+      await client.unenrollFromCourse(currentUser._id, courseId);
       dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
+    } catch (err: any) {
+      console.error("Unenrollment error:", err);
     }
   };
+
   const displayedCourses = () => {
     if (!currentUser) return courses;
     if (currentUser.role === "FACULTY") return courses;

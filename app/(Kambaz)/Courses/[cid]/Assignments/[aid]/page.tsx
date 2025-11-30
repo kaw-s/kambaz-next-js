@@ -1,34 +1,27 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { addAssignment, updateAssignment } from "../reducer";
-import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import * as client from "../client"
+import * as client from "../client";
+
+interface Assignment {
+  _id?: string;
+  title: string;
+  description: string;
+  points: string | number;
+  dueDate: string;
+  availableDate: string;
+  availableUntil: string;
+  course?: string;
+}
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
-  const dispatch = useDispatch();
-  //const assignment = db.assignments.find((a: any) => a._id === aid);
+  const router = useRouter();
 
-  // get assignments from reducer
-  const { assignments = [] } = useSelector(
-    (state: any) => state.assignmentReducer || {}
-  );
-
-  console.log("aid:", aid);
-  console.log("All assignments:", assignments);
-  console.log("Looking for assignment with id:", aid);
-
-  // if we are directed to add a new assignment
   const isNewAssignment = aid === "new";
 
-  // check if the assigment exists
-  const existingAssignment = !isNewAssignment
-    ? assignments.find((a: any) => a._id === aid)
-    : null;
-
-  const [assignment, setAssignment] = useState({
+  const [assignment, setAssignment] = useState<Assignment>({
     title: "",
     description:
       "This assignment requires you to demonstrate your understanding of the course material.",
@@ -38,58 +31,76 @@ export default function AssignmentEditor() {
     availableUntil: "2025-05-28",
   });
 
+  const [loading, setLoading] = useState(!isNewAssignment);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch existing assignment if editing
   useEffect(() => {
     if (isNewAssignment) {
-      // Reset to default values for new assignment
-      setAssignment({
-        title: "",
-        description:
-          "This assignment requires you to demonstrate your understanding of the course material.",
-        points: "100",
-        dueDate: "2025-05-24",
-        availableDate: "2025-05-20",
-        availableUntil: "2025-05-28",
-      });
-    } else if (existingAssignment) {
-      // Load existing assignment data
-      setAssignment({
-        title: existingAssignment.title,
-        description:
-          existingAssignment.description ||
-          "This assignment requires you to demonstrate your understanding of the course material.",
-        points: existingAssignment.points || "100",
-        dueDate: existingAssignment.dueDate || "2025-05-24",
-        availableDate: existingAssignment.availableDate || "2025-05-20",
-        availableUntil: existingAssignment.availableUntil || "2025-05-28",
-      });
+      setLoading(false);
+      return;
     }
-  }, [aid, existingAssignment, isNewAssignment]);
+
+    const fetchAssignment = async () => {
+      try {
+        setLoading(true);
+        // Fetch all assignments for the course and find the one we need
+        const assignments = await client.findAssignmentsForCourse(
+          cid as string
+        );
+        const existing = assignments.find((a: Assignment) => a._id === aid);
+
+        if (existing) {
+          setAssignment(existing);
+        } else {
+          setError("Assignment not found.");
+        }
+      } catch (err) {
+        console.error("Error fetching assignment:", err);
+        setError("Failed to load assignment.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAssignment();
+  }, [aid, cid, isNewAssignment]);
 
   const handleSave = async () => {
-    if (isNewAssignment) {
-      await client.createAssignmentForCourse(cid as string , assignment)
-      dispatch(
-        addAssignment({
-          ...assignment,
-          course: cid as string,
-        })
-      );
-    } else {
-      dispatch(
-        await client.updateAssignment(assignment),
-        updateAssignment({
+    try {
+      const assignmentWithCourse = {
+        ...assignment,
+        course: cid as string,
+      };
+
+      if (isNewAssignment) {
+        await client.createAssignmentForCourse(
+          cid as string,
+          assignmentWithCourse
+        );
+      } else {
+        await client.updateAssignment({
           _id: aid as string,
-          ...assignment,
-          course: cid as string,
-        })
-      );
+          ...assignmentWithCourse,
+        });
+      }
+
+      // Navigate back to assignments list
+      router.push(`/Courses/${cid}/Assignments`);
+    } catch (err) {
+      console.error("Error saving assignment:", err);
+      setError("Failed to save assignment.");
     }
   };
 
-  //if the assignment isnt found display message
-  if (!isNewAssignment && !existingAssignment) {
-    return <div className="p-3">Assignment not found.</div>;
+  if (loading) {
+    return <div className="p-3">Loading assignment...</div>;
   }
+
+  if (error) {
+    return <div className="p-3 text-danger">{error}</div>;
+  }
+
   return (
     <div id="wd-assignments-editor" className="p-3">
       <div className="mb-3">
@@ -100,7 +111,7 @@ export default function AssignmentEditor() {
           type="text"
           className="form-control"
           id="wd-name"
-          defaultValue={assignment.title}
+          value={assignment.title}
           onChange={(e) =>
             setAssignment({ ...assignment, title: e.target.value })
           }
@@ -112,9 +123,7 @@ export default function AssignmentEditor() {
           className="form-control"
           id="wd-description"
           rows={5}
-          value={
-            assignment.description
-          }
+          value={assignment.description}
           onChange={(e) =>
             setAssignment({ ...assignment, description: e.target.value })
           }
@@ -238,7 +247,7 @@ export default function AssignmentEditor() {
               type="date"
               className="form-control mb-3"
               id="wd-due-date"
-              defaultValue={assignment.dueDate || "2025-05-24"}
+              value={assignment.dueDate}
               onChange={(e) =>
                 setAssignment({ ...assignment, dueDate: e.target.value })
               }
@@ -256,7 +265,7 @@ export default function AssignmentEditor() {
                   type="date"
                   className="form-control"
                   id="wd-available-from"
-                  defaultValue={assignment.availableDate || "2025-05-20"}
+                  value={assignment.availableDate}
                   onChange={(e) =>
                     setAssignment({
                       ...assignment,
@@ -276,7 +285,7 @@ export default function AssignmentEditor() {
                   type="date"
                   className="form-control"
                   id="wd-available-until"
-                  defaultValue={assignment.availableUntil || "2025-05-28"}
+                  value={assignment.availableUntil}
                   onChange={(e) =>
                     setAssignment({
                       ...assignment,
@@ -299,13 +308,9 @@ export default function AssignmentEditor() {
         >
           Cancel
         </Link>
-        <Link
-          href={`/Courses/${cid}/Assignments`}
-          onClick={handleSave}
-          className="btn btn-danger btn-lg"
-        >
+        <button onClick={handleSave} className="btn btn-danger btn-lg">
           Save
-        </Link>
+        </button>
       </div>
     </div>
   );

@@ -23,9 +23,9 @@ export default function CourseNavigation({ cid }: { cid: string }) {
       {links.map((link) => {
         // Build link href if people make People/Table instead
         const href =
-          link === "People"
-            ? `/Courses/${cid}/People/Table`
-            : `/Courses/${cid}/${link}`;
+          // link === "People"
+          //   ? `/Courses/${cid}/People/Table`
+             `/Courses/${cid}/${link}`;
 
         // get active link
         const isActive =
