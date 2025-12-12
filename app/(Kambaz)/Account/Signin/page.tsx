@@ -1,7 +1,7 @@
 "use client";
 import * as client from "../client";
 import Link from "next/link";
-import { redirect } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 import { setCurrentUser } from "../reducer";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
@@ -10,12 +10,13 @@ import { FormControl, Button } from "react-bootstrap";
 export default function Signin() {
   const [credentials, setCredentials] = useState<any>({});
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const signin = async () => {
     const user = await client.signin(credentials);
     if (!user) return;
     dispatch(setCurrentUser(user));
-    redirect("/Dashboard");
+    router.push("/Dashboard");
   };
 
   return (
@@ -44,7 +45,7 @@ export default function Signin() {
         {" "}
         Sign in{" "}
       </Button>
-      <Link id="wd-signup-link" href="/Kambaz/Account/Signup">
+      <Link id="wd-signup-link" href="/Account/Signup">
         {" "}
         Sign up{" "}
       </Link>

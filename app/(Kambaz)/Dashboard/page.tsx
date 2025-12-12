@@ -63,14 +63,17 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const fetchCourses = async () => {
     try {
-      const courses = await client.findMyCourses();
+      // Always fetch all courses - displayedCourses() handles filtering for students
+      const courses = await client.fetchAllCourses();
       dispatch(setCourses(courses));
     } catch (error) {
       console.error(error);
     }
   };
   useEffect(() => {
-    fetchCourses();
+    if (currentUser) {
+      fetchCourses();
+    }
   }, [currentUser]);
 
   const [course, setCourse] = useState<Course>({
@@ -294,6 +297,7 @@ export default function Dashboard() {
                           <Button
                             onClick={(event) => {
                               event.preventDefault();
+                              event.stopPropagation();
                               handleUnenroll(course._id);
                             }}
                             variant="danger"
@@ -306,6 +310,7 @@ export default function Dashboard() {
                             <Button
                               onClick={(event) => {
                                 event.preventDefault();
+                                event.stopPropagation();
                                 handleEnroll(course._id);
                               }}
                               variant="success"
